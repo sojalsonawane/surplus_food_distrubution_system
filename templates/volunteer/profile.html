@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+{% block title %}Volunteer Profile - Surplus Food Distribution System{% endblock %}
+
+{% block content %}
+<div class="container py-5"><div class="d-flex justify-content-between align-items-center mb-4"><div><span class="text-success fw-bold text-uppercase small">Volunteer Portal</span><h2 class="fw-bold mb-0">Vehicle & Area Profile</h2></div><a href="{{ url_for('volunteer.dashboard') }}" class="btn btn-outline-secondary">Back to Dashboard</a></div><div class="custom-card p-4"><div class="row g-3"><div class="col-md-6"><label class="text-muted small">Vehicle / Transport</label><div class="fw-semibold">{{ volunteer.vehicle_type|replace('_', ' ')|title if volunteer else 'Not specified' }}</div></div><div class="col-md-6"><label class="text-muted small">Availability</label><div class="fw-semibold">{{ volunteer.availability_status|title if volunteer else 'Active' }}</div></div><div class="col-md-6"><label class="text-muted small">City</label><div class="fw-semibold">{{ volunteer.city if volunteer else 'Not specified' }}</div></div><div class="col-md-6"><label class="text-muted small">PIN Code</label><div class="fw-semibold">{{ volunteer.pincode if volunteer else 'Not specified' }}</div></div><div class="col-12"><label class="text-muted small">Residential / Base Address</label><div class="fw-semibold">{{ volunteer.address if volunteer else 'Not specified' }}</div></div></div></div></div>
+{% endblock %}

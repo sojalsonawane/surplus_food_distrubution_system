@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block title %}Volunteers Roster - Surplus Food Distribution System{% endblock %}
+
+{% block content %}
+<div class="py-4 bg-dark-green text-white mb-4">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1">
+                    <li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}" class="text-light opacity-75 text-decoration-none">Dashboard</a></li>
+                    <li class="breadcrumb-item active text-white" aria-current="page">Volunteers</li>
+                </ol>
+            </nav>
+            <h2 class="fw-bold mb-0"><i class="fa-solid fa-person-biking me-2 text-warning"></i> Volunteers & Pickup Fleet</h2>
+        </div>
+        <div class="mt-2 mt-md-0">
+            <span class="badge bg-light text-dark p-2">Total Volunteers: <strong>{{ pagination.total_items }}</strong></span>
+        </div>
+    </div>
+</div>
+
+<div class="container pb-5">
+    <!-- Filter -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+        <form method="GET" action="{{ url_for('admin.volunteers') }}" class="row g-3 align-items-end">
+            <div class="col-md-5">
+                <label for="search" class="form-label fw-semibold small text-muted">Search Volunteers</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+                    <input type="text" class="form-control" id="search" name="search" value="{{ search }}" placeholder="Search by name, city, or phone...">
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <label for="vehicle_type" class="form-label fw-semibold small text-muted">Transport Mode</label>
+                <select class="form-select" id="vehicle_type" name="vehicle_type">
+                    <option value="">All Vehicles</option>
+                    <option value="two_wheeler" {% if vehicle_type == 'two_wheeler' %}selected{% endif %}>Two-Wheeler</option>
+                    <option value="four_wheeler" {% if vehicle_type == 'four_wheeler' %}selected{% endif %}>Four-Wheeler</option>
+                    <option value="van" {% if vehicle_type == 'van' %}selected{% endif %}>Van / Truck</option>
+                    <option value="bicycle" {% if vehicle_type == 'bicycle' %}selected{% endif %}>Bicycle</option>
+                    <option value="none" {% if vehicle_type == 'none' %}selected{% endif %}>On Foot / Public Transit</option>
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <label for="availability" class="form-label fw-semibold small text-muted">Availability</label>
+                <select class="form-select" id="availability" name="availability">
+                    <option value="">All Statuses</option>
+                    <option value="available" {% if availability == 'available' %}selected{% endif %}>Available</option>
+                    <option value="busy" {% if availability == 'busy' %}selected{% endif %}>Busy</option>
+                    <option value="inactive" {% if availability == 'inactive' %}selected{% endif %}>Inactive</option>
+                </select>
+            </div>
+
+            <div class="col-md-2 d-flex gap-2">
+                <button type="submit" class="btn btn-success w-100 fw-semibold"><i class="fa-solid fa-filter me-1"></i> Filter</button>
+                <a href="{{ url_for('admin.volunteers') }}" class="btn btn-outline-secondary"><i class="fa-solid fa-rotate-left"></i></a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Volunteers Table -->
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white mb-4">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Volunteer</th>
+                        <th>Mobile</th>
+                        <th>City / Base</th>
+                        <th>Vehicle Mode</th>
+                        <th>Availability</th>
+                        <th>Tasks Handled</th>
+                        <th>Account</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if volunteers %}
+                        {% for v in volunteers %}
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="fw-bold text-dark">{{ v.name }}</div>
+                                    <div class="small text-muted">{{ v.email }}</div>
+                                </td>
+                                <td>{{ v.phone }}</td>
+                                <td>{{ v.city }} (PIN: {{ v.pincode }})</td>
+                                <td>
+                                    <span class="badge bg-light text-dark border">
+                                        <i class="fa-solid fa-car-side me-1 text-primary"></i>
+                                        {{ v.vehicle_type|replace('_', ' ')|title }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge {{ 'bg-success' if v.availability_status == 'available' else 'bg-warning text-dark' if v.availability_status == 'busy' else 'bg-secondary' }}">
+                                        {{ v.availability_status|title }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-primary">{{ v.total_assigned }} assigned</span>
+                                    <span class="badge bg-success ms-1">{{ v.total_delivered }} completed</span>
+                                </td>
+                                <td>
+                                    <span class="badge {{ 'bg-success' if v.user_status == 'active' else 'bg-secondary' }}">
+                                        {{ v.user_status|title }}
+                                    </span>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="7" class="text-center py-5 text-muted">
+                                <i class="fa-solid fa-person-biking fa-3x text-secondary opacity-50 mb-3"></i>
+                                <p class="mb-0">No volunteers found matching your query.</p>
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if pagination.total_pages > 1 %}
+            <div class="card-footer bg-white border-0 py-3 d-flex justify-content-between align-items-center">
+                <div class="small text-muted">Page {{ pagination.page }} of {{ pagination.total_pages }}</div>
+                <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item {% if not pagination.has_prev %}disabled{% endif %}">
+                        <a class="page-link" href="{{ url_for('admin.volunteers', page=pagination.prev_page, search=search, vehicle_type=vehicle_type, availability=availability) }}">Prev</a>
+                    </li>
+                    <li class="page-item active"><span class="page-link">{{ pagination.page }}</span></li>
+                    <li class="page-item {% if not pagination.has_next %}disabled{% endif %}">
+                        <a class="page-link" href="{{ url_for('admin.volunteers', page=pagination.next_page, search=search, vehicle_type=vehicle_type, availability=availability) }}">Next</a>
+                    </li>
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

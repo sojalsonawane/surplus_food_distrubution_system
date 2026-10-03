@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}Contact Us - Surplus Food Distribution System{% endblock %}
+
+{% block content %}
+<div class="page-hero-section py-5 text-white">
+    <div class="container text-center">
+        <h1 class="fw-bold">Contact Our Support Team</h1>
+        <p class="lead mb-0">Have questions about donations, NGO onboarding, or volunteering? We are here to assist.</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row g-5">
+        <div class="col-lg-5">
+            <h3 class="fw-bold text-dark mb-3">Get in Touch</h3>
+            <p class="text-muted mb-4">
+                Whether you are an event organizer looking to establish a recurring food donation partnership or an NGO requiring assistance with document verification, our community team is at your service.
+            </p>
+
+            <div class="d-flex mb-4">
+                <div class="step-number me-3 flex-shrink-0" style="width: 42px; height: 42px; line-height: 42px;">
+                    <i class="fa-solid fa-location-dot"></i>
+                </div>
+                <div>
+                    <h6 class="fw-bold mb-1">Central Coordination Hub</h6>
+                    <p class="small text-muted mb-0">Surplus Food Redistribution Network, Community Center Road, Sector 4, New Delhi - 110001, India</p>
+                </div>
+            </div>
+
+            <div class="d-flex mb-4">
+                <div class="step-number me-3 flex-shrink-0" style="width: 42px; height: 42px; line-height: 42px;">
+                    <i class="fa-solid fa-phone"></i>
+                </div>
+                <div>
+                    <h6 class="fw-bold mb-1">Helpline Support</h6>
+                    <p class="small text-muted mb-0">+91 98765 43210 (Mon-Sat, 7:00 AM - 10:00 PM IST)</p>
+                </div>
+            </div>
+
+            <div class="d-flex mb-4">
+                <div class="step-number me-3 flex-shrink-0" style="width: 42px; height: 42px; line-height: 42px;">
+                    <i class="fa-solid fa-envelope"></i>
+                </div>
+                <div>
+                    <h6 class="fw-bold mb-1">Direct Inquiries</h6>
+                    <p class="small text-muted mb-0">support@surplusfood.org / emergency@surplusfood.org</p>
+                </div>
+            </div>
+
+            <div class="p-4 bg-light rounded-4 border">
+                <h6 class="fw-bold text-dark mb-2"><i class="fa-solid fa-clock-rotate-left text-success me-2"></i> Immediate Night Surplus?</h6>
+                <p class="small text-muted mb-0">
+                    If you have hot cooked food from an evening event that must be collected before midnight, please call our direct hotline for expedited dispatch.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+                <h4 class="fw-bold text-dark mb-4">Send Us a Message</h4>
+                <form method="POST" action="{{ url_for('main.contact') }}" class="needs-validation" novalidate>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="name" class="form-label fw-semibold">Full Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ name|default('') }}" required minlength="2" maxlength="100" placeholder="e.g. Ramesh Sharma">
+                            <div class="invalid-feedback">Please enter your name (min 2 characters).</div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="email" class="form-label fw-semibold">Email Address <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ email|default('') }}" required placeholder="name@example.com">
+                            <div class="invalid-feedback">Please provide a valid email address.</div>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="subject" class="form-label fw-semibold">Subject <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="subject" name="subject" value="{{ subject|default('') }}" required minlength="4" maxlength="150" placeholder="e.g. Partnership inquiry for wedding hall surplus">
+                            <div class="invalid-feedback">Please provide a subject.</div>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="message" class="form-label fw-semibold">Message <span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="message" name="message" rows="5" required minlength="10" placeholder="Provide details about your query or donation program...">{{ message|default('') }}</textarea>
+                            <div class="invalid-feedback">Please enter your message (min 10 characters).</div>
+                        </div>
+
+                        <div class="col-12 mt-4">
+                            <button type="submit" class="btn btn-success px-5 py-2 fw-semibold">
+                                <i class="fa-solid fa-paper-plane me-2"></i> Submit Inquiry
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

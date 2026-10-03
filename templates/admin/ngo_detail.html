@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+
+{% block title %}NGO Dossier: {{ ngo.ngo_name }} - Surplus Food Distribution System{% endblock %}
+
+{% block content %}
+<div class="py-4 bg-dark-green text-white mb-4">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1">
+                    <li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}" class="text-light opacity-75 text-decoration-none">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url_for('admin.ngos') }}" class="text-light opacity-75 text-decoration-none">NGOs</a></li>
+                    <li class="breadcrumb-item active text-white" aria-current="page">{{ ngo.ngo_name }}</li>
+                </ol>
+            </nav>
+            <h2 class="fw-bold mb-0">{{ ngo.ngo_name }}</h2>
+        </div>
+        <div class="mt-2 mt-md-0">
+            <span class="badge {{ 'bg-warning text-dark fs-6' if ngo.verification_status == 'pending' else 'bg-success fs-6' if ngo.verification_status == 'verified' else 'bg-danger fs-6' }} px-3 py-2">
+                Status: {{ ngo.verification_status|upper }}
+            </span>
+        </div>
+    </div>
+</div>
+
+<div class="container pb-5">
+    <div class="row g-4">
+        <!-- Left: Dossier & Legal Details -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+                <h5 class="fw-bold text-dark mb-4 border-bottom pb-2">
+                    <i class="fa-solid fa-id-card text-primary me-2"></i> Official Organization Profile
+                </h5>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="text-muted small">NGO Name</label>
+                        <div class="fw-bold text-dark fs-5">{{ ngo.ngo_name }}</div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="text-muted small">Government Registration / Darpan No.</label>
+                        <div><code class="fs-6">{{ ngo.registration_number }}</code></div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="text-muted small">NGO Type</label>
+                        <div><span class="badge bg-light text-dark border">{{ ngo.ngo_type|replace('_', ' ')|title }}</span></div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="text-muted small">Authorized Representative</label>
+                        <div class="fw-semibold">{{ ngo.contact_person }}</div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="text-muted small">Email Address</label>
+                        <div>{{ ngo.email }}</div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="text-muted small">Phone Number</label>
+                        <div>{{ ngo.phone }}</div>
+                    </div>
+
+                    <div class="col-12">
+                        <label class="text-muted small">Office / Center Address</label>
+                        <div>{{ ngo.address }}, {{ ngo.city }}, {{ ngo.state }} - {{ ngo.pincode }}</div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="text-muted small">Registered On</label>
+                        <div>{{ ngo.created_at }}</div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="text-muted small">Login Account Status</label>
+                        <div>
+                            <span class="badge {{ 'bg-success' if ngo.user_status == 'active' else 'bg-warning text-dark' }}">
+                                {{ ngo.user_status|title }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Uploaded Document Section -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+                <h5 class="fw-bold text-dark mb-3 border-bottom pb-2">
+                    <i class="fa-solid fa-file-shield text-success me-2"></i> Verification Document
+                </h5>
+                {% if ngo.verification_document %}
+                    <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded-3 border">
+                        <div class="d-flex align-items-center">
+                            <i class="fa-solid fa-file-pdf fa-2x text-danger me-3"></i>
+                            <div>
+                                <div class="fw-bold text-dark text-truncate" style="max-width: 320px;">{{ ngo.verification_document }}</div>
+                                <small class="text-muted">Uploaded government registration certificate</small>
+                            </div>
+                        </div>
+                        <a href="{{ url_for('admin.view_document', filename=ngo.verification_document) }}" target="_blank" class="btn btn-outline-primary">
+                            <i class="fa-solid fa-arrow-up-right-from-square me-1"></i> Open Document
+                        </a>
+                    </div>
+                {% else %}
+                    <p class="text-muted small mb-0">No verification document was attached during registration.</p>
+                {% endif %}
+            </div>
+
+            <!-- Impact Statistics -->
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="custom-card p-3 text-center border-start border-4 border-success">
+                        <div class="text-muted small fw-bold">BENEFICIARIES</div>
+                        <div class="fs-3 fw-bold text-dark">{{ beneficiary_count }}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="custom-card p-3 text-center border-start border-4 border-primary">
+                        <div class="text-muted small fw-bold">DISTRIBUTIONS</div>
+                        <div class="fs-3 fw-bold text-dark">{{ distribution_count }}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="custom-card p-3 text-center border-start border-4 border-danger">
+                        <div class="text-muted small fw-bold">MEALS SERVED</div>
+                        <div class="fs-3 fw-bold text-dark">{{ servings_count }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Verification Action Controls -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+                <h5 class="fw-bold text-dark mb-3"><i class="fa-solid fa-stamp text-warning me-2"></i> Verification Action</h5>
+
+                {% if ngo.verification_status == 'pending' %}
+                    <p class="small text-muted mb-4">
+                        Please review the uploaded certificate carefully. Approving will activate the account and enable food requests.
+                    </p>
+
+                    <!-- Approve Button -->
+                    <form method="POST" action="{{ url_for('admin.verify_ngo', ngo_id=ngo.id) }}" class="mb-3">
+                        <input type="hidden" name="action" value="approve">
+                        <button type="submit" class="btn btn-success w-100 py-2 fw-semibold" onclick="return confirm('Confirm approval of this NGO?');">
+                            <i class="fa-solid fa-circle-check me-2"></i> Approve & Activate NGO
+                        </button>
+                    </form>
+
+                    <!-- Reject Button triggers modal -->
+                    <button type="button" class="btn btn-outline-danger w-100 py-2 fw-semibold" data-bs-toggle="modal" data-bs-target="#rejectModal">
+                        <i class="fa-solid fa-circle-xmark me-2"></i> Reject Registration
+                    </button>
+
+                {% elif ngo.verification_status == 'verified' %}
+                    <div class="alert alert-success small mb-3">
+                        <i class="fa-solid fa-check-double me-1"></i> Verified on: {{ ngo.verified_at or 'N/A' }}<br>
+                        By: {{ ngo.verified_by_name or 'Administrator' }}
+                    </div>
+
+                    <!-- Option to re-review or reject if needed -->
+                    <button type="button" class="btn btn-outline-danger btn-sm w-100" data-bs-toggle="modal" data-bs-target="#rejectModal">
+                        Revoke / Mark Rejected
+                    </button>
+
+                {% else %}
+                    <div class="alert alert-danger small mb-3">
+                        <i class="fa-solid fa-triangle-exclamation me-1"></i> Registration Rejected.<br>
+                        <strong>Reason:</strong> {{ ngo.rejection_reason or 'Documentation failed criteria.' }}
+                    </div>
+
+                    <!-- Re-approve if correct document was provided -->
+                    <form method="POST" action="{{ url_for('admin.verify_ngo', ngo_id=ngo.id) }}">
+                        <input type="hidden" name="action" value="approve">
+                        <button type="submit" class="btn btn-outline-success btn-sm w-100" onclick="return confirm('Re-approve this NGO?');">
+                            Re-Approve NGO
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
+
+            <!-- Back Link -->
+            <a href="{{ url_for('admin.ngos') }}" class="btn btn-outline-secondary w-100">
+                <i class="fa-solid fa-arrow-left me-1"></i> Back to NGOs Roster
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Rejection Modal with Reason Input -->
+<div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content border-0 shadow rounded-4">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="rejectModalLabel"><i class="fa-solid fa-triangle-exclamation me-2"></i> Reject NGO Registration</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST" action="{{ url_for('admin.verify_ngo', ngo_id=ngo.id) }}">
+                <input type="hidden" name="action" value="reject">
+                <div class="modal-body p-4">
+                    <p class="small text-muted mb-3">
+                        Please specify the reason for rejecting <strong>{{ ngo.ngo_name }}</strong>. This explanation will be communicated to the organization.
+                    </p>
+                    <div class="mb-3">
+                        <label for="reason" class="form-label fw-semibold">Reason for Rejection <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="reason" name="reason" rows="4" required placeholder="e.g. Uploaded certificate is expired / registration number could not be verified on the official registry..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Confirm Rejection</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

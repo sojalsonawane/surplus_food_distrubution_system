@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block title %}Surplus Food Donations Ledger - Surplus Food Distribution System{% endblock %}
+
+{% block content %}
+<div class="py-4 bg-dark-green text-white mb-4">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1">
+                    <li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}" class="text-light opacity-75 text-decoration-none">Dashboard</a></li>
+                    <li class="breadcrumb-item active text-white" aria-current="page">Food Donations</li>
+                </ol>
+            </nav>
+            <h2 class="fw-bold mb-0"><i class="fa-solid fa-boxes-packing me-2 text-warning"></i> Surplus Food Supervision</h2>
+        </div>
+        <div class="mt-2 mt-md-0">
+            <span class="badge bg-light text-dark p-2">Total Food Postings: <strong>{{ pagination.total_items }}</strong></span>
+        </div>
+    </div>
+</div>
+
+<div class="container pb-5">
+    <!-- Filters -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+        <form method="GET" action="{{ url_for('admin.donations') }}" class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label for="search" class="form-label fw-semibold small text-muted">Search Food</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+                    <input type="text" class="form-control" id="search" name="search" value="{{ search }}" placeholder="Search by food name, donor, city...">
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <label for="status" class="form-label fw-semibold small text-muted">Status</label>
+                <select class="form-select" id="status" name="status">
+                    <option value="">All Statuses</option>
+                    <option value="Pending" {% if status == 'Pending' %}selected{% endif %}>Pending</option>
+                    <option value="Approved" {% if status == 'Approved' %}selected{% endif %}>Approved</option>
+                    <option value="Pickup Assigned" {% if status == 'Pickup Assigned' %}selected{% endif %}>Pickup Assigned</option>
+                    <option value="Picked Up" {% if status == 'Picked Up' %}selected{% endif %}>Picked Up</option>
+                    <option value="Delivered" {% if status == 'Delivered' %}selected{% endif %}>Delivered</option>
+                    <option value="Distributed" {% if status == 'Distributed' %}selected{% endif %}>Distributed</option>
+                    <option value="Completed" {% if status == 'Completed' %}selected{% endif %}>Completed</option>
+                    <option value="Cancelled" {% if status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                    <option value="Expired" {% if status == 'Expired' %}selected{% endif %}>Expired</option>
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <label for="category" class="form-label fw-semibold small text-muted">Category</label>
+                <select class="form-select" id="category" name="category">
+                    <option value="">All Categories</option>
+                    <option value="cooked_meals" {% if category == 'cooked_meals' %}selected{% endif %}>Cooked Meals</option>
+                    <option value="raw_ingredients" {% if category == 'raw_ingredients' %}selected{% endif %}>Raw Ingredients</option>
+                    <option value="bakery_items" {% if category == 'bakery_items' %}selected{% endif %}>Bakery Items</option>
+                    <option value="packaged_foods" {% if category == 'packaged_foods' %}selected{% endif %}>Packaged Foods</option>
+                    <option value="fruits_vegetables" {% if category == 'fruits_vegetables' %}selected{% endif %}>Fruits & Vegetables</option>
+                    <option value="dairy_products" {% if category == 'dairy_products' %}selected{% endif %}>Dairy Products</option>
+                </select>
+            </div>
+
+            <div class="col-md-2 d-flex gap-2">
+                <button type="submit" class="btn btn-success w-100 fw-semibold"><i class="fa-solid fa-filter me-1"></i> Filter</button>
+                <a href="{{ url_for('admin.donations') }}" class="btn btn-outline-secondary"><i class="fa-solid fa-rotate-left"></i></a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Table -->
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white mb-4">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Image</th>
+                        <th>Food Item</th>
+                        <th>Donor</th>
+                        <th>Quantity & Servings</th>
+                        <th>Best Before</th>
+                        <th>City / Area</th>
+                        <th>Status</th>
+                        <th class="text-end pe-4">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if donations %}
+                        {% for d in donations %}
+                            <tr>
+                                <td class="ps-4">
+                                    {% if d.food_image %}
+                                        <img src="{{ url_for('static', filename='uploads/food_images/' ~ d.food_image) }}" class="food-image-thumb" alt="{{ d.food_name }}">
+                                    {% else %}
+                                        <span class="d-inline-flex align-items-center justify-content-center food-image-thumb bg-light text-muted"><i class="fa-solid fa-image"></i></span>
+                                    {% endif %}
+                                </td>
+                                <td class="ps-4">
+                                    <div class="fw-bold text-dark">{{ d.food_name }}</div>
+                                    <span class="badge {{ 'badge-veg' if d.food_type == 'veg' else 'badge-nonveg' }} small">
+                                        {{ d.food_type|upper }}
+                                    </span>
+                                    <span class="badge bg-light text-muted border small">{{ d.food_category|replace('_', ' ')|title }}</span>
+                                </td>
+                                <td>
+                                    <div>{{ d.donor_name }}</div>
+                                    <small class="text-muted">{{ d.donor_phone }}</small>
+                                </td>
+                                <td>
+                                    <div class="fw-semibold">{{ d.quantity }} {{ d.unit }}</div>
+                                    <small class="text-muted">~{{ d.servings_estimate }} people</small>
+                                </td>
+                                <td>
+                                    <div class="text-danger small fw-bold">{{ d.best_before_datetime }}</div>
+                                </td>
+                                <td>{{ d.area }}, {{ d.city }}</td>
+                                <td>
+                                    <span class="badge {{ 'bg-warning text-dark' if d.status == 'Pending' else 'bg-success' if d.status == 'Completed' else 'bg-info text-dark' if 'Pickup' in d.status or d.status == 'Approved' else 'bg-secondary' }}">
+                                        {{ d.status }}
+                                    </span>
+                                </td>
+                                <td class="text-end pe-4">
+                                    <a href="{{ url_for('admin.donation_detail', donation_id=d.id) }}" class="btn btn-sm btn-primary py-1 px-3">
+                                        <i class="fa-solid fa-eye me-1"></i> Inspect
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="8" class="text-center py-5 text-muted">
+                                <i class="fa-solid fa-utensils fa-3x text-secondary opacity-50 mb-3"></i>
+                                <p class="mb-0">No food donation listings found matching query.</p>
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if pagination.total_pages > 1 %}
+            <div class="card-footer bg-white border-0 py-3 d-flex justify-content-between align-items-center">
+                <div class="small text-muted">Page {{ pagination.page }} of {{ pagination.total_pages }}</div>
+                <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item {% if not pagination.has_prev %}disabled{% endif %}">
+                        <a class="page-link" href="{{ url_for('admin.donations', page=pagination.prev_page, search=search, status=status, category=category) }}">Prev</a>
+                    </li>
+                    <li class="page-item active"><span class="page-link">{{ pagination.page }}</span></li>
+                    <li class="page-item {% if not pagination.has_next %}disabled{% endif %}">
+                        <a class="page-link" href="{{ url_for('admin.donations', page=pagination.next_page, search=search, status=status, category=category) }}">Next</a>
+                    </li>
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

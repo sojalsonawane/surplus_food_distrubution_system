@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+
+{% block title %}Inspect Donation: {{ donation.food_name }} - Surplus Food Distribution System{% endblock %}
+
+{% block content %}
+<div class="py-4 bg-dark-green text-white mb-4">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1">
+                    <li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}" class="text-light opacity-75 text-decoration-none">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url_for('admin.donations') }}" class="text-light opacity-75 text-decoration-none">Donations</a></li>
+                    <li class="breadcrumb-item active text-white" aria-current="page">{{ donation.food_name }}</li>
+                </ol>
+            </nav>
+            <h2 class="fw-bold mb-0">{{ donation.food_name }}</h2>
+        </div>
+        <div class="mt-2 mt-md-0">
+            <span class="badge {{ 'bg-warning text-dark fs-6' if donation.status == 'Pending' else 'bg-success fs-6' if donation.status == 'Completed' else 'bg-primary fs-6' }} px-3 py-2">
+                Status: {{ donation.status }}
+            </span>
+        </div>
+    </div>
+</div>
+
+<div class="container pb-5">
+    <div class="row g-4">
+        <!-- Left: Donation Dossier -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+                <h5 class="fw-bold text-dark mb-4 border-bottom pb-2">
+                    <i class="fa-solid fa-bowl-food text-success me-2"></i> Food Details & Safety Timestamps
+                </h5>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="text-muted small">Food Name</label>
+                        <div class="fw-bold text-dark fs-5">{{ donation.food_name }}</div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="text-muted small">Dietary Type</label>
+                        <div>
+                            <span class="badge {{ 'badge-veg' if donation.food_type == 'veg' else 'badge-nonveg' }} fs-6">
+                                {{ donation.food_type|upper }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="text-muted small">Category</label>
+                        <div><span class="badge bg-light text-dark border">{{ donation.food_category|replace('_', ' ')|title }}</span></div>
+                    </div>
+
+                    <div class="col-12">
+                        <label class="text-muted small">Food Image</label>
+                        <div class="mt-1">
+                            {% if donation.food_image %}
+                                <img src="{{ url_for('static', filename='uploads/food_images/' ~ donation.food_image) }}" class="img-fluid rounded-3 border" style="max-width: 320px; max-height: 240px; object-fit: cover;" alt="{{ donation.food_name }}">
+                            {% else %}
+                                <span class="text-muted">No food image uploaded.</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="text-muted small">Quantity & Unit</label>
+                        <div class="fw-bold fs-5 text-primary">{{ donation.quantity }} {{ donation.unit }}</div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="text-muted small">Estimated Servings Capacity</label>
+                        <div class="fw-bold fs-5 text-dark">Serves ~{{ donation.servings_estimate }} people</div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="p-3 bg-light rounded-3 border">
+                            <label class="text-muted small fw-bold">Preparation Date/Time</label>
+                            <div class="fw-semibold text-dark">{{ donation.preparation_datetime }}</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="p-3 bg-light rounded-3 border border-warning">
+                            <label class="text-muted small fw-bold text-danger">Best Before Expiration</label>
+                            <div class="fw-bold text-danger">{{ donation.best_before_datetime }}</div>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <label class="text-muted small">Special Instructions / Packaging</label>
+                        <div class="p-3 bg-light rounded-3 text-muted">{{ donation.special_instructions or 'No special handling instructions provided.' }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pickup Location & Donor Contact -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+                <h5 class="fw-bold text-dark mb-3 border-bottom pb-2">
+                    <i class="fa-solid fa-location-dot text-danger me-2"></i> Pickup Location & Donor Contact
+                </h5>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="text-muted small">Donor Name / Org</label>
+                        <div class="fw-bold text-dark">{{ donation.donor_name }} {% if donation.organization_name %}({{ donation.organization_name }}){% endif %}</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="text-muted small">Direct Contact Number</label>
+                        <div class="fw-bold text-success"><i class="fa-solid fa-phone me-1"></i> {{ donation.contact_number }}</div>
+                    </div>
+                    <div class="col-12">
+                        <label class="text-muted small">Pickup Address</label>
+                        <div>{{ donation.pickup_address }}, {{ donation.area }}, {{ donation.city }} - PIN: {{ donation.pincode }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Current Pickup Status if Assigned -->
+            {% if pickup %}
+                <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+                    <h5 class="fw-bold text-dark mb-3 border-bottom pb-2">
+                        <i class="fa-solid fa-truck-pickup text-primary me-2"></i> Active Pickup Duty
+                    </h5>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="text-muted small">Assigned Volunteer</label>
+                            <div class="fw-bold text-dark">{{ pickup.volunteer_name }}</div>
+                            <div class="small text-muted"><i class="fa-solid fa-phone me-1"></i> {{ pickup.volunteer_phone }}</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="text-muted small">Transport Mode</label>
+                            <div><span class="badge bg-light text-dark border">{{ pickup.vehicle_type|replace('_', ' ')|title }}</span></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="text-muted small">Pickup Status</label>
+                            <div>
+                                <span class="badge {{ 'bg-warning text-dark' if pickup.status == 'assigned' else 'bg-info text-dark' if pickup.status == 'accepted' else 'bg-success' }}">
+                                    {{ pickup.status|title }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="text-muted small">Assigned At</label>
+                            <div>{{ pickup.assigned_at }}</div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Right: Admin Actions & Dispatch -->
+        <div class="col-lg-4">
+            <!-- Approval / Rejection Card -->
+            {% if donation.status == 'Pending' %}
+                <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4 border-start border-warning border-4">
+                    <h5 class="fw-bold text-dark mb-3"><i class="fa-solid fa-check-to-slot text-warning me-2"></i> Verification</h5>
+                    <p class="small text-muted mb-3">
+                        Verify that the preparation time and best-before date meet our food redistribution standards before approving.
+                    </p>
+                    <form method="POST" action="{{ url_for('admin.verify_donation', donation_id=donation.id) }}" class="mb-2">
+                        <input type="hidden" name="action" value="approve">
+                        <button type="submit" class="btn btn-success w-100 py-2 fw-semibold mb-2" onclick="return confirm('Approve this surplus food posting?');">
+                            <i class="fa-solid fa-check-circle me-1"></i> Approve Donation
+                        </button>
+                    </form>
+                    <form method="POST" action="{{ url_for('admin.verify_donation', donation_id=donation.id) }}">
+                        <input type="hidden" name="action" value="reject">
+                        <button type="submit" class="btn btn-outline-danger w-100 py-2" onclick="return confirm('Reject this food listing?');">
+                            <i class="fa-solid fa-xmark me-1"></i> Reject Listing
+                        </button>
+                    </form>
+                </div>
+            {% endif %}
+
+            <!-- Volunteer Dispatch Card -->
+            {% if donation.status in ['Approved', 'Pending', 'Pickup Assigned'] %}
+                <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+                    <h5 class="fw-bold text-dark mb-3"><i class="fa-solid fa-person-biking text-primary me-2"></i> Dispatch Volunteer</h5>
+                    <p class="small text-muted mb-3">
+                        Assign an active local volunteer to collect this surplus batch from the donor.
+                    </p>
+                    <form method="POST" action="{{ url_for('admin.assign_pickup', donation_id=donation.id) }}">
+                        <div class="mb-3">
+                            <label for="volunteer_id" class="form-label fw-semibold small">Select Active Volunteer <span class="text-danger">*</span></label>
+                            <select class="form-select" id="volunteer_id" name="volunteer_id" required>
+                                <option value="">-- Choose Volunteer --</option>
+                                {% for v in volunteers %}
+                                    <option value="{{ v.id }}" {% if pickup and pickup.volunteer_id == v.id %}selected{% endif %}>
+                                        {{ v.name }} ({{ v.city }} - {{ v.vehicle_type|replace('_', ' ') }})
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="notes" class="form-label fw-semibold small">Dispatch Notes / Timings</label>
+                            <textarea class="form-control" id="notes" name="notes" rows="2" placeholder="e.g. Please collect before 7:00 PM in insulated carriers..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">
+                            <i class="fa-solid fa-truck-ramp-box me-1"></i> Assign Pickup Duty
+                        </button>
+                    </form>
+                </div>
+            {% endif %}
+
+            <a href="{{ url_for('admin.donations') }}" class="btn btn-outline-secondary w-100">
+                <i class="fa-solid fa-arrow-left me-1"></i> Back to Donations Ledger
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

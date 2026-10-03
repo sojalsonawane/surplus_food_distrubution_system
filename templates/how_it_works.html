@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}How It Works - Surplus Food Distribution System{% endblock %}
+
+{% block content %}
+<div class="page-hero-section py-5 text-white">
+    <div class="container text-center">
+        <h1 class="fw-bold">How It Works</h1>
+        <p class="lead mb-0">The complete, step-by-step lifecycle of food donation and distribution.</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-10 text-center">
+            <h3 class="fw-bold text-dark">End-to-End Distribution Workflow</h3>
+            <p class="text-muted">
+                Our platform enforces a strict finite state machine to guarantee that food is systematically tracked, preserved, and distributed without safety compromises.
+            </p>
+        </div>
+    </div>
+
+    <!-- Timeline / Step Sequence -->
+    <div class="row g-4 justify-content-center">
+        <div class="col-lg-10">
+            <!-- Step 1 -->
+            <div class="card mb-4 border-0 shadow-sm rounded-3">
+                <div class="card-body p-4 d-flex">
+                    <div class="me-4 text-center">
+                        <span class="badge bg-success rounded-circle p-3 fs-5" style="width: 55px; height: 55px; display: inline-flex; align-items: center; justify-content: center;">1</span>
+                    </div>
+                    <div>
+                        <span class="badge bg-light text-success fw-bold text-uppercase mb-1">Step 1: Donation Creation</span>
+                        <h5 class="fw-bold text-dark mb-1">Donor Posts Surplus Food</h5>
+                        <p class="text-muted mb-2">
+                            A registered individual, hotel, or caterer posts details including food category, quantity, number of estimated servings, preparation date/time, and mandatory best-before date/time.
+                        </p>
+                        <span class="badge bg-warning text-dark"><i class="fa-solid fa-clock me-1"></i> Initial Status: Pending</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="card mb-4 border-0 shadow-sm rounded-3">
+                <div class="card-body p-4 d-flex">
+                    <div class="me-4 text-center">
+                        <span class="badge bg-success rounded-circle p-3 fs-5" style="width: 55px; height: 55px; display: inline-flex; align-items: center; justify-content: center;">2</span>
+                    </div>
+                    <div>
+                        <span class="badge bg-light text-success fw-bold text-uppercase mb-1">Step 2: Verification & Approval</span>
+                        <h5 class="fw-bold text-dark mb-1">Admin / NGO Verification</h5>
+                        <p class="text-muted mb-2">
+                            The system checks that the food has not expired, the pickup address is valid, and the donor contact number is verified. The listing is approved and made visible to verified NGOs.
+                        </p>
+                        <span class="badge bg-info text-dark"><i class="fa-solid fa-check me-1"></i> Status: Approved</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="card mb-4 border-0 shadow-sm rounded-3">
+                <div class="card-body p-4 d-flex">
+                    <div class="me-4 text-center">
+                        <span class="badge bg-success rounded-circle p-3 fs-5" style="width: 55px; height: 55px; display: inline-flex; align-items: center; justify-content: center;">3</span>
+                    </div>
+                    <div>
+                        <span class="badge bg-light text-success fw-bold text-uppercase mb-1">Step 3: Volunteer Assignment</span>
+                        <h5 class="fw-bold text-dark mb-1">Volunteer Assigned for Pickup</h5>
+                        <p class="text-muted mb-2">
+                            An active volunteer with appropriate vehicle capacity located in the donor's city/area is assigned to collect the surplus food batch.
+                        </p>
+                        <span class="badge bg-primary"><i class="fa-solid fa-user-tag me-1"></i> Status: Pickup Assigned</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="card mb-4 border-0 shadow-sm rounded-3">
+                <div class="card-body p-4 d-flex">
+                    <div class="me-4 text-center">
+                        <span class="badge bg-success rounded-circle p-3 fs-5" style="width: 55px; height: 55px; display: inline-flex; align-items: center; justify-content: center;">4</span>
+                    </div>
+                    <div>
+                        <span class="badge bg-light text-success fw-bold text-uppercase mb-1">Step 4: Pickup Acceptance & Transit</span>
+                        <h5 class="fw-bold text-dark mb-1">Volunteer Accepts & Collects Food</h5>
+                        <p class="text-muted mb-2">
+                            The volunteer accepts the assignment, travels to the donor pickup address, verifies the packaged quantity, and confirms pickup in the application.
+                        </p>
+                        <div class="d-flex gap-2">
+                            <span class="badge bg-secondary"><i class="fa-solid fa-thumbs-up me-1"></i> Status: Pickup Accepted</span>
+                            <span class="badge bg-warning text-dark"><i class="fa-solid fa-box me-1"></i> Status: Picked Up</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5 -->
+            <div class="card mb-4 border-0 shadow-sm rounded-3">
+                <div class="card-body p-4 d-flex">
+                    <div class="me-4 text-center">
+                        <span class="badge bg-success rounded-circle p-3 fs-5" style="width: 55px; height: 55px; display: inline-flex; align-items: center; justify-content: center;">5</span>
+                    </div>
+                    <div>
+                        <span class="badge bg-light text-success fw-bold text-uppercase mb-1">Step 5: Handover to NGO</span>
+                        <h5 class="fw-bold text-dark mb-1">Delivery to Verified NGO Center</h5>
+                        <p class="text-muted mb-2">
+                            Food is delivered safely to the designated NGO distribution center or community kitchen, where it is inspected for proper temperature and condition.
+                        </p>
+                        <span class="badge bg-info text-dark"><i class="fa-solid fa-truck-ramp-box me-1"></i> Status: Delivered</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 6 -->
+            <div class="card mb-4 border-0 shadow-sm rounded-3">
+                <div class="card-body p-4 d-flex">
+                    <div class="me-4 text-center">
+                        <span class="badge bg-success rounded-circle p-3 fs-5" style="width: 55px; height: 55px; display: inline-flex; align-items: center; justify-content: center;">6</span>
+                    </div>
+                    <div>
+                        <span class="badge bg-light text-success fw-bold text-uppercase mb-1">Step 6: Community Distribution</span>
+                        <h5 class="fw-bold text-dark mb-1">Distribution to Beneficiaries & Completion</h5>
+                        <p class="text-muted mb-2">
+                            The NGO distributes meals directly to registered beneficiary families or individuals. Quantity reconciliation is logged and the donation lifecycle is closed.
+                        </p>
+                        <div class="d-flex gap-2">
+                            <span class="badge bg-primary"><i class="fa-solid fa-people-group me-1"></i> Status: Distributed</span>
+                            <span class="badge bg-success"><i class="fa-solid fa-circle-check me-1"></i> Final Status: Completed</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Business Rule Highlights -->
+    <div class="row justify-content-center mt-4">
+        <div class="col-lg-10">
+            <div class="card bg-light border-0 p-4 rounded-4">
+                <h5 class="fw-bold text-dark mb-3"><i class="fa-solid fa-scale-balanced text-success me-2"></i> Strict Workflow Guardrails</h5>
+                <ul class="list-unstyled mb-0 row g-3 small">
+                    <li class="col-md-6"><i class="fa-solid fa-ban text-danger me-2"></i> Completed donations cannot be edited or modified.</li>
+                    <li class="col-md-6"><i class="fa-solid fa-ban text-danger me-2"></i> Expired donations are locked and cannot be accepted.</li>
+                    <li class="col-md-6"><i class="fa-solid fa-ban text-danger me-2"></i> Cancelled donations cannot be assigned to volunteers.</li>
+                    <li class="col-md-6"><i class="fa-solid fa-ban text-danger me-2"></i> Pickups cannot be marked completed before acceptance.</li>
+                    <li class="col-md-6"><i class="fa-solid fa-ban text-danger me-2"></i> Distributions cannot occur prior to verified pickup.</li>
+                    <li class="col-md-6"><i class="fa-solid fa-ban text-danger me-2"></i> Pickup quantity can never exceed available donation quantity.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}My Donations - Surplus Food Distribution System{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4"><div><span class="text-success fw-bold text-uppercase small">Food Donor Portal</span><h2 class="fw-bold mb-0">My Donation History</h2></div><a href="{{ url_for('donor.create_donation') }}" class="btn btn-success"><i class="fa-solid fa-plus me-1"></i>New Donation</a></div>
+    <div class="custom-card p-3">
+        {% if donations %}
+        <div class="table-responsive"><table class="table table-hover align-middle mb-0"><thead><tr><th>Image</th><th>Food</th><th>Quantity</th><th>Status</th><th>Posted</th><th></th></tr></thead><tbody>{% for item in donations %}<tr><td>{% if item.food_image %}<img src="{{ url_for('static', filename='uploads/food_images/' ~ item.food_image) }}" class="food-image-thumb" alt="{{ item.food_name }}">{% else %}<span class="d-inline-flex align-items-center justify-content-center food-image-thumb bg-light text-muted"><i class="fa-solid fa-image"></i></span>{% endif %}</td><td class="fw-semibold">{{ item.food_name }}</td><td>{{ item.quantity }} {{ item.unit }}</td><td><span class="badge bg-{{ 'success' if item.status == 'Completed' else 'warning text-dark' if item.status == 'Pending' else 'primary' }}">{{ item.status }}</span></td><td>{{ item.created_at }}</td><td><a class="btn btn-sm btn-outline-success" href="{{ url_for('donor.donation_detail', donation_id=item.id) }}">View</a></td></tr>{% endfor %}</tbody></table></div>
+        {% else %}<div class="text-center p-5 text-muted"><i class="fa-solid fa-bowl-food fa-3x mb-3"></i><p>No donations posted yet.</p><a href="{{ url_for('donor.create_donation') }}" class="btn btn-success">Post Your First Donation</a></div>{% endif %}
+    </div>
+</div>
+{% endblock %}

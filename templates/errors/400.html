@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}400 - Bad Request | Surplus Food Distribution System{% endblock %}
+{% block content %}
+<div class="container py-5 text-center my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-6">
+            <div class="card border-0 shadow-sm p-5 rounded-4 bg-white">
+                <i class="fa-solid fa-triangle-exclamation text-warning display-1 mb-3"></i>
+                <h1 class="fw-bold text-dark display-5">400</h1>
+                <h4 class="fw-semibold mb-3">Bad Request</h4>
+                <p class="text-muted mb-4">
+                    The request could not be processed due to invalid parameters or formatting. Please verify your input and try again.
+                </p>
+                <div>
+                    <a href="{{ url_for('main.index') }}" class="btn btn-success px-4 py-2">
+                        <i class="fa-solid fa-house me-2"></i> Return to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

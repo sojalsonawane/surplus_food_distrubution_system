@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block title %}Donation Details - Surplus Food Distribution System{% endblock %}
+
+{% block content %}
+<div class="container py-5"><div class="d-flex justify-content-between align-items-center mb-4"><div><span class="text-success fw-bold text-uppercase small">Donation Tracking</span><h2 class="fw-bold mb-0">{{ donation.food_name }}</h2></div><a href="{{ url_for('donor.donations') }}" class="btn btn-outline-secondary">Back to Donations</a></div>
+<div class="custom-card p-4"><div class="row g-3"><div class="col-md-6"><strong>Category:</strong> {{ donation.food_category|replace('_', ' ')|title }}</div><div class="col-md-6"><strong>Status:</strong> <span class="badge bg-primary">{{ donation.status }}</span></div><div class="col-md-6"><strong>Quantity:</strong> {{ donation.quantity }} {{ donation.unit }}</div><div class="col-md-6"><strong>Servings:</strong> {{ donation.servings_estimate }}</div><div class="col-md-6"><strong>City:</strong> {{ donation.city }}</div><div class="col-md-6"><strong>Area:</strong> {{ donation.area }}</div><div class="col-12"><strong>Pickup Address:</strong> {{ donation.pickup_address }}</div><div class="col-12"><strong>Instructions:</strong> {{ donation.special_instructions or 'None' }}</div></div><hr><div class="d-flex gap-2">{% if donation.status in ['Pending', 'Approved'] %}<a href="{{ url_for('donor.edit_donation', donation_id=donation.id) }}" class="btn btn-outline-success">Edit Donation</a><form method="post" action="{{ url_for('donor.cancel_donation', donation_id=donation.id) }}"><button class="btn btn-outline-danger" type="submit">Cancel Donation</button></form>{% endif %}</div></div></div>
+{% endblock %}

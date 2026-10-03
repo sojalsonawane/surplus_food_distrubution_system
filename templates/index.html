@@ -1,0 +1,297 @@
+{% extends "base.html" %}
+
+{% block title %}Surplus Food Distribution System - Save Food, Serve Communities{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section text-center text-lg-start">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-7 mb-4 mb-lg-0">
+                <span class="badge bg-light text-success fw-bold px-3 py-2 mb-3 rounded-pill text-uppercase">
+                    <i class="fa-solid fa-leaf me-1"></i> Food Recovery & Redistribution Network
+                </span>
+                <h1 class="hero-title mb-3">
+                    Reduce Food Waste. Share Food. Serve Communities.
+                </h1>
+                <p class="hero-subtitle mb-4">
+                    Connect individuals, restaurants, and catering services with verified NGOs and volunteer pickup networks. Make sure every edible surplus meal reaches someone in need before it spoils.
+                </p>
+                <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start">
+                    <a href="/register?role=donor" class="btn btn-warning btn-lg px-4 py-2 text-dark fw-bold shadow-sm">
+                        <i class="fa-solid fa-bowl-food me-2"></i> Donate Food
+                    </a>
+                    <a href="/register?role=ngo" class="btn btn-outline-light btn-lg px-4 py-2 fw-semibold">
+                        <i class="fa-solid fa-magnifying-glass me-2"></i> Find Food
+                    </a>
+                    <a href="/register?role=volunteer" class="btn btn-light btn-lg px-4 py-2 text-success fw-semibold shadow-sm">
+                        <i class="fa-solid fa-person-biking me-2"></i> Join as Volunteer
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-5 text-center">
+                <div class="bg-white p-4 rounded-4 shadow-lg text-dark text-start border">
+                    <h5 class="fw-bold text-success mb-3 d-flex align-items-center">
+                        <i class="fa-solid fa-bell me-2 text-warning"></i> Instant Surplus Food Alert
+                    </h5>
+                    <p class="small text-muted mb-3">
+                        Are you hosting an event, wedding, or running a restaurant with excess safe cooked meals? List it in under 2 minutes.
+                    </p>
+                    <ul class="list-unstyled small mb-4">
+                        <li class="mb-2"><i class="fa-solid fa-circle-check text-success me-2"></i> Verified NGOs claim available surplus</li>
+                        <li class="mb-2"><i class="fa-solid fa-circle-check text-success me-2"></i> Nearby volunteers mobilized for swift pickup</li>
+                        <li class="mb-2"><i class="fa-solid fa-circle-check text-success me-2"></i> Transparent status updates from prep to distribution</li>
+                    </ul>
+                    <a href="/register?role=donor" class="btn btn-success w-100 py-2 fw-bold">
+                        <i class="fa-solid fa-plus-circle me-1"></i> Post Surplus Food Now
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Food Safety Warning Notice -->
+<section class="py-4 bg-light">
+    <div class="container">
+        <div class="food-safety-banner d-flex align-items-start shadow-sm">
+            <i class="fa-solid fa-triangle-exclamation fa-2x text-warning me-3 flex-shrink-0 mt-1"></i>
+            <div>
+                <h6 class="fw-bold text-dark mb-1">Crucial Food Safety Standard</h6>
+                <p class="mb-0 small">
+                    “Only safe and edible surplus food should be donated. Do not donate spoiled, contaminated or expired food.” 
+                    All food entries require strict preparation and best-before datetime timestamps with quantity and hygiene verification. 
+                    <a href="{{ url_for('main.food_safety') }}" class="fw-bold text-dark text-decoration-underline ms-1">Read Food Safety Policy &rarr;</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Impact Metrics / Statistics -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold text-dark">Platform Redistribution Impact</h2>
+            <p class="text-muted">
+                Tracking every kilogram of food rescued and every community served.
+                {% if stats.is_demo_data %}
+                    <span class="badge bg-secondary ms-2" title="Benchmark metrics for development demonstration"><i class="fa-solid fa-info-circle me-1"></i> Development Sample Benchmark</span>
+                {% else %}
+                    <span class="badge bg-success ms-2"><i class="fa-solid fa-database me-1"></i> Verified Live Data</span>
+                {% endif %}
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-3 col-sm-6">
+                <div class="stat-card">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="text-muted small text-uppercase fw-bold">Total Donations</div>
+                            <div class="stat-number">
+                                {% if stats.is_demo_data %}{{ stats.demo_donations }}{% else %}{{ stats.total_donations }}{% endif %}
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-utensils fa-2x text-success opacity-50"></i>
+                    </div>
+                    <div class="small text-muted mt-2">Surplus food listings registered</div>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-sm-6">
+                <div class="stat-card">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="text-muted small text-uppercase fw-bold">Meals Served</div>
+                            <div class="stat-number">
+                                {% if stats.is_demo_data %}{{ stats.demo_meals }}{% else %}{{ stats.meals_served }}{% endif %}
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-heart fa-2x text-danger opacity-50"></i>
+                    </div>
+                    <div class="small text-muted mt-2">Beneficiary servings delivered</div>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-sm-6">
+                <div class="stat-card">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="text-muted small text-uppercase fw-bold">Verified NGOs</div>
+                            <div class="stat-number">
+                                {% if stats.is_demo_data %}{{ stats.demo_ngos }}{% else %}{{ stats.total_ngos }}{% endif %}
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-building-ngo fa-2x text-primary opacity-50"></i>
+                    </div>
+                    <div class="small text-muted mt-2">Shelters & community kitchens</div>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-sm-6">
+                <div class="stat-card">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="text-muted small text-uppercase fw-bold">Active Volunteers</div>
+                            <div class="stat-number">
+                                {% if stats.is_demo_data %}{{ stats.demo_volunteers }}{% else %}{{ stats.total_volunteers }}{% endif %}
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-person-biking fa-2x text-warning opacity-50"></i>
+                    </div>
+                    <div class="small text-muted mt-2">Dedicated food pickup champions</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="badge bg-success px-3 py-2 text-uppercase fw-semibold mb-2">Streamlined Logistics</span>
+            <h2 class="fw-bold text-dark">How The System Works</h2>
+            <p class="text-muted max-w-600 mx-auto">
+                A transparent, closed-loop workflow ensuring surplus food is inspected, collected, and delivered without unnecessary delays.
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-3 col-sm-6">
+                <div class="step-box">
+                    <span class="step-number">1</span>
+                    <h5 class="fw-bold mb-2">Donor Posts Surplus</h5>
+                    <p class="small text-muted">
+                        Donors post edible surplus meals specifying quantity, preparation time, best-before date, and pickup location.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-sm-6">
+                <div class="step-box">
+                    <span class="step-number">2</span>
+                    <h5 class="fw-bold mb-2">Verification & Match</h5>
+                    <p class="small text-muted">
+                        Admins and verified NGOs review availability against expiry guidelines and approve legitimate requests.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-sm-6">
+                <div class="step-box">
+                    <span class="step-number">3</span>
+                    <h5 class="fw-bold mb-2">Volunteer Pickup</h5>
+                    <p class="small text-muted">
+                        An active volunteer accepts the pickup task, collects the food in hygienic containers, and marks status.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-sm-6">
+                <div class="step-box">
+                    <span class="step-number">4</span>
+                    <h5 class="fw-bold mb-2">NGO Distribution</h5>
+                    <p class="small text-muted">
+                        NGO receives the batch, reconciles quantity, and distributes hot meals directly to registered beneficiaries.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Why Food Redistribution Matters -->
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <span class="text-success fw-bold text-uppercase small">Urgent Mission</span>
+                <h2 class="fw-bold text-dark mb-3">Why Surplus Food Redistribution Matters</h2>
+                <p class="text-muted">
+                    Millions of tons of wholesome, safe, and nutritious food end up in landfills each year while millions of vulnerable families experience hunger. Food waste in landfills produces massive methane emissions that accelerate climate change.
+                </p>
+                <div class="d-flex align-items-start mb-3">
+                    <div class="step-number me-3 flex-shrink-0" style="width:36px; height:36px; line-height:36px; font-size: 0.9rem;">
+                        <i class="fa-solid fa-leaf"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1">Environmental Preservation</h6>
+                        <p class="small text-muted mb-0">Reduces greenhouse gases generated by decomposing organic waste in municipal landfills.</p>
+                    </div>
+                </div>
+                <div class="d-flex align-items-start mb-3">
+                    <div class="step-number me-3 flex-shrink-0" style="width:36px; height:36px; line-height:36px; font-size: 0.9rem;">
+                        <i class="fa-solid fa-hands-holding-child"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1">Direct Social Relief</h6>
+                        <p class="small text-muted mb-0">Channels fresh meals to orphanages, elderly homes, day shelters, and disaster relief zones.</p>
+                    </div>
+                </div>
+                <div class="d-flex align-items-start">
+                    <div class="step-number me-3 flex-shrink-0" style="width:36px; height:36px; line-height:36px; font-size: 0.9rem;">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1">Traceable Accountability</h6>
+                        <p class="small text-muted mb-0">Provides verified donation receipts, distribution history, and complete audit tracking.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="row g-3">
+                    <div class="col-12">
+                        <div class="custom-card p-4">
+                            <h5 class="fw-bold text-success"><i class="fa-solid fa-utensils me-2"></i> For Food Donors</h5>
+                            <p class="small text-muted mb-2">
+                                Eliminate disposal costs, fulfill Corporate Social Responsibility (CSR), and receive real-time updates when your food is distributed to people in need.
+                            </p>
+                            <a href="/register?role=donor" class="text-success fw-semibold small text-decoration-none">Become a Donor &rarr;</a>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="custom-card p-4">
+                            <h5 class="fw-bold text-primary"><i class="fa-solid fa-building-ngo me-2"></i> For Verified NGOs</h5>
+                            <p class="small text-muted mb-2">
+                                Access steady, reliable sources of nutritious food for your beneficiaries without exhausting limited operational budgets.
+                            </p>
+                            <a href="/register?role=ngo" class="text-primary fw-semibold small text-decoration-none">Register Your NGO &rarr;</a>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="custom-card p-4">
+                            <h5 class="fw-bold text-warning"><i class="fa-solid fa-person-biking me-2"></i> For Community Volunteers</h5>
+                            <p class="small text-muted mb-2">
+                                Offer your spare time and vehicle to pick up food parcels from donors and deliver them safely to nearby distribution centers.
+                            </p>
+                            <a href="/register?role=volunteer" class="text-warning fw-semibold small text-decoration-none">Join Volunteer Network &rarr;</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="cta-section py-5 text-white">
+    <div class="container text-center py-4">
+        <h2 class="fw-bold mb-3">Join Us in Ending Food Waste in Our Cities</h2>
+        <p class="lead mb-4 mx-auto" style="max-width: 680px;">
+            Whether you are a caterer with extra wedding food, a volunteer with an hour to spare, or an NGO feeding the hungry, your action makes an immediate difference.
+        </p>
+        <div class="d-flex flex-wrap gap-3 justify-content-center">
+            <a href="/register?role=donor" class="btn btn-warning btn-lg px-4 text-dark fw-bold shadow">
+                <i class="fa-solid fa-hand-holding-heart me-2"></i> Get Started as Donor
+            </a>
+            <a href="{{ url_for('main.contact') }}" class="btn btn-outline-light btn-lg px-4 fw-semibold">
+                <i class="fa-solid fa-comments me-2"></i> Contact Our Team
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

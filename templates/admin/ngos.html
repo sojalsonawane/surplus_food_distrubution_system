@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block title %}NGO Directory & Verifications - Surplus Food Distribution System{% endblock %}
+
+{% block content %}
+<div class="py-4 bg-dark-green text-white mb-4">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1">
+                    <li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}" class="text-light opacity-75 text-decoration-none">Dashboard</a></li>
+                    <li class="breadcrumb-item active text-white" aria-current="page">NGOs</li>
+                </ol>
+            </nav>
+            <h2 class="fw-bold mb-0"><i class="fa-solid fa-building-circle-check me-2 text-warning"></i> NGO Verifications & Directory</h2>
+        </div>
+        <div class="mt-2 mt-md-0">
+            <span class="badge bg-light text-dark p-2">Total Organizations: <strong>{{ pagination.total_items }}</strong></span>
+        </div>
+    </div>
+</div>
+
+<div class="container pb-5">
+    <!-- Filter Card -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+        <form method="GET" action="{{ url_for('admin.ngos') }}" class="row g-3 align-items-end">
+            <div class="col-md-6">
+                <label for="search" class="form-label fw-semibold small text-muted">Search NGO</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+                    <input type="text" class="form-control" id="search" name="search" value="{{ search }}" placeholder="Search by name, registration no., or city...">
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <label for="status" class="form-label fw-semibold small text-muted">Verification Status</label>
+                <select class="form-select" id="status" name="status">
+                    <option value="">All Verification States</option>
+                    <option value="pending" {% if status == 'pending' %}selected{% endif %}>Pending Verification</option>
+                    <option value="verified" {% if status == 'verified' %}selected{% endif %}>Verified / Approved</option>
+                    <option value="rejected" {% if status == 'rejected' %}selected{% endif %}>Rejected</option>
+                </select>
+            </div>
+
+            <div class="col-md-3 d-flex gap-2">
+                <button type="submit" class="btn btn-success w-100 fw-semibold">
+                    <i class="fa-solid fa-filter me-1"></i> Filter
+                </button>
+                <a href="{{ url_for('admin.ngos') }}" class="btn btn-outline-secondary" title="Reset Filters">
+                    <i class="fa-solid fa-rotate-left"></i>
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <!-- NGO Table -->
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white mb-4">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">NGO Name</th>
+                        <th>Registration No.</th>
+                        <th>Contact Person</th>
+                        <th>Location</th>
+                        <th>Category</th>
+                        <th>Verification Status</th>
+                        <th>Certificate</th>
+                        <th class="text-end pe-4">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if ngos %}
+                        {% for n in ngos %}
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="fw-bold text-dark">{{ n.ngo_name }}</div>
+                                    <div class="small text-muted">{{ n.email }}</div>
+                                </td>
+                                <td><code>{{ n.registration_number }}</code></td>
+                                <td>
+                                    <div>{{ n.contact_person }}</div>
+                                    <small class="text-muted">{{ n.phone }}</small>
+                                </td>
+                                <td>{{ n.city }}, {{ n.state }}</td>
+                                <td><span class="badge bg-light text-dark border">{{ n.ngo_type|replace('_', ' ')|title }}</span></td>
+                                <td>
+                                    <span class="badge {{ 'bg-warning text-dark' if n.verification_status == 'pending' else 'bg-success' if n.verification_status == 'verified' else 'bg-danger' }}">
+                                        {{ n.verification_status|title }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if n.verification_document %}
+                                        <a href="{{ url_for('admin.view_document', filename=n.verification_document) }}" target="_blank" class="btn btn-sm btn-outline-primary py-0 px-2" title="View Uploaded Certificate">
+                                            <i class="fa-solid fa-file-pdf me-1"></i> View Doc
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted small">Not provided</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end pe-4">
+                                    <a href="{{ url_for('admin.ngo_detail', ngo_id=n.id) }}" class="btn btn-sm btn-primary py-1 px-3">
+                                        <i class="fa-solid fa-eye me-1"></i> Review
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="8" class="text-center py-5 text-muted">
+                                <i class="fa-solid fa-building-circle-xmark fa-3x text-secondary opacity-50 mb-3"></i>
+                                <p class="mb-0">No NGOs found matching your criteria.</p>
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        {% if pagination.total_pages > 1 %}
+            <div class="card-footer bg-white border-0 py-3 d-flex justify-content-between align-items-center">
+                <div class="small text-muted">
+                    Page <strong>{{ pagination.page }}</strong> of <strong>{{ pagination.total_pages }}</strong> ({{ pagination.total_items }} total)
+                </div>
+                <nav>
+                    <ul class="pagination pagination-sm mb-0">
+                        <li class="page-item {% if not pagination.has_prev %}disabled{% endif %}">
+                            <a class="page-link" href="{{ url_for('admin.ngos', page=pagination.prev_page, search=search, status=status) }}">Previous</a>
+                        </li>
+                        {% for p in pagination.iter_pages() %}
+                            {% if p %}
+                                <li class="page-item {% if p == pagination.page %}active{% endif %}">
+                                    <a class="page-link" href="{{ url_for('admin.ngos', page=p, search=search, status=status) }}">{{ p }}</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled"><span class="page-link">&hellip;</span></li>
+                            {% endif %}
+                        {% endfor %}
+                        <li class="page-item {% if not pagination.has_next %}disabled{% endif %}">
+                            <a class="page-link" href="{{ url_for('admin.ngos', page=pagination.next_page, search=search, status=status) }}">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

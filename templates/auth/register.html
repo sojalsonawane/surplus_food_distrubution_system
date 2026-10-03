@@ -1,0 +1,354 @@
+{% extends "base.html" %}
+
+{% block title %}Register - Surplus Food Distribution System{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <!-- Header -->
+                <div class="p-4 bg-dark-green text-white text-center">
+                    <h3 class="fw-bold mb-1">Create an Account</h3>
+                    <p class="small text-light opacity-75 mb-0">Join our community to bridge surplus food with those who need it most</p>
+                </div>
+
+                <div class="card-body p-4 p-md-5 bg-white">
+                    <form method="POST" action="{{ url_for('auth.register') }}" enctype="multipart/form-data" class="needs-validation" id="registerForm" novalidate>
+                        
+                        <!-- Role Selection Radio Group -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-dark mb-2">Select Your Role <span class="text-danger">*</span></label>
+                            <div class="row g-2">
+                                <div class="col-md-4">
+                                    <input type="radio" class="btn-check" name="role" id="role_donor" value="donor" autocomplete="off" {% if role == 'donor' or not role %}checked{% endif %}>
+                                    <label class="btn btn-outline-success w-100 p-3 text-start h-100 d-flex flex-column" for="role_donor">
+                                        <div class="d-flex align-items-center mb-1">
+                                            <i class="fa-solid fa-bowl-food fa-lg me-2"></i>
+                                            <strong class="fs-6">Food Donor</strong>
+                                        </div>
+                                        <small class="text-muted">Individual, Restaurant, Hotel, Caterer</small>
+                                    </label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="radio" class="btn-check" name="role" id="role_ngo" value="ngo" autocomplete="off" {% if role == 'ngo' %}checked{% endif %}>
+                                    <label class="btn btn-outline-primary w-100 p-3 text-start h-100 d-flex flex-column" for="role_ngo">
+                                        <div class="d-flex align-items-center mb-1">
+                                            <i class="fa-solid fa-building-ngo fa-lg me-2"></i>
+                                            <strong class="fs-6">NGO / Charity</strong>
+                                        </div>
+                                        <small class="text-muted">Shelter, Food Bank, Kitchen</small>
+                                    </label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="radio" class="btn-check" name="role" id="role_volunteer" value="volunteer" autocomplete="off" {% if role == 'volunteer' %}checked{% endif %}>
+                                    <label class="btn btn-outline-warning w-100 p-3 text-start h-100 d-flex flex-column" for="role_volunteer">
+                                        <div class="d-flex align-items-center mb-1">
+                                            <i class="fa-solid fa-person-biking fa-lg me-2"></i>
+                                            <strong class="fs-6">Volunteer</strong>
+                                        </div>
+                                        <small class="text-muted">Food Pickup Champion</small>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <!-- SECTION 1: Common User Information -->
+                        <h5 class="fw-bold text-dark mb-3"><i class="fa-solid fa-user me-2 text-success"></i> Basic Account Details</h5>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label for="name" class="form-label fw-semibold">Full Name / Contact Person <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="name" name="name" value="{{ data.name|default('') }}" required minlength="2" maxlength="100" placeholder="e.g. Ramesh Sharma">
+                                <div class="invalid-feedback">Please enter your full name (at least 2 characters).</div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="email" class="form-label fw-semibold">Email Address <span class="text-danger">*</span></label>
+                                <input type="email" class="form-control" id="email" name="email" value="{{ data.email|default('') }}" required placeholder="name@example.com">
+                                <div class="invalid-feedback">Please enter a valid email address.</div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="phone" class="form-label fw-semibold">Mobile Number <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">+91</span>
+                                    <input type="tel" class="form-control" id="phone" name="phone" value="{{ data.phone|default('') }}" required pattern="^[6-9]\d{9}$" maxlength="10" placeholder="10-digit mobile number">
+                                </div>
+                                <small class="text-muted">Must be 10 digits starting with 6, 7, 8, or 9.</small>
+                                <div class="invalid-feedback">Please enter a valid 10-digit Indian mobile number.</div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <!-- Password -->
+                                <label for="password" class="form-label fw-semibold">Password <span class="text-danger">*</span></label>
+                                <input type="password" class="form-control" id="password" name="password" required minlength="8" placeholder="At least 8 characters">
+                                <div class="invalid-feedback">Password must be at least 8 characters.</div>
+                            </div>
+
+                            <div class="col-md-6 offset-md-6">
+                                <!-- Confirm Password -->
+                                <label for="confirm_password" class="form-label fw-semibold">Confirm Password <span class="text-danger">*</span></label>
+                                <input type="password" class="form-control" id="confirm_password" name="confirm_password" required minlength="8" placeholder="Re-enter password">
+                                <div class="invalid-feedback" id="confirmFeedback">Passwords must match.</div>
+                            </div>
+                        </div>
+
+                        <!-- Password requirements guideline checklist -->
+                        <div class="p-3 bg-light rounded-3 mb-4 small border">
+                            <div class="fw-bold text-muted mb-1"><i class="fa-solid fa-shield-halved text-success me-1"></i> Password Security Requirements:</div>
+                            <div class="row g-1 text-muted">
+                                <div class="col-sm-6" id="ruleLen"><i class="fa-solid fa-circle-dot me-1 text-secondary"></i> Min 8 characters</div>
+                                <div class="col-sm-6" id="ruleUpper"><i class="fa-solid fa-circle-dot me-1 text-secondary"></i> At least 1 uppercase letter</div>
+                                <div class="col-sm-6" id="ruleLower"><i class="fa-solid fa-circle-dot me-1 text-secondary"></i> At least 1 lowercase letter</div>
+                                <div class="col-sm-6" id="ruleNumber"><i class="fa-solid fa-circle-dot me-1 text-secondary"></i> At least 1 number</div>
+                                <div class="col-sm-6" id="ruleSpecial"><i class="fa-solid fa-circle-dot me-1 text-secondary"></i> At least 1 special character (@$!%*?&#)</div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <!-- SECTION 2: Role Specific Details -->
+
+                        <!-- A. DONOR FIELDS -->
+                        <div id="donorFields" class="role-section">
+                            <h5 class="fw-bold text-dark mb-3"><i class="fa-solid fa-utensils me-2 text-success"></i> Food Donor Profile</h5>
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <label for="donor_type" class="form-label fw-semibold">Donor Type <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="donor_type" name="donor_type">
+                                        <option value="individual" {% if data.donor_type == 'individual' %}selected{% endif %}>Individual / Household</option>
+                                        <option value="restaurant" {% if data.donor_type == 'restaurant' %}selected{% endif %}>Restaurant</option>
+                                        <option value="hotel" {% if data.donor_type == 'hotel' %}selected{% endif %}>Hotel</option>
+                                        <option value="caterer" {% if data.donor_type == 'caterer' %}selected{% endif %}>Catering Service / Banquet</option>
+                                        <option value="corporate" {% if data.donor_type == 'corporate' %}selected{% endif %}>Corporate Cafeteria</option>
+                                        <option value="supermarket" {% if data.donor_type == 'supermarket' %}selected{% endif %}>Supermarket / Grocery</option>
+                                        <option value="other" {% if data.donor_type == 'other' %}selected{% endif %}>Other Entity</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="organization_name" class="form-label fw-semibold">Business / Organization Name</label>
+                                    <input type="text" class="form-control" id="organization_name" name="organization_name" value="{{ data.organization_name|default('') }}" placeholder="Required if not an individual">
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="donor_address" class="form-label fw-semibold">Pickup Address / Premises <span class="text-danger">*</span></label>
+                                    <textarea class="form-control" id="donor_address" name="address" rows="2" placeholder="Full street address where food will usually be collected">{{ data.address|default('') }}</textarea>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="donor_city" class="form-label fw-semibold">City <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="donor_city" name="city" value="{{ data.city|default('') }}" placeholder="e.g. Mumbai">
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="donor_area" class="form-label fw-semibold">Area / Locality <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="donor_area" name="area" value="{{ data.area|default('') }}" placeholder="e.g. Andheri West">
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="donor_pincode" class="form-label fw-semibold">PIN Code <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="donor_pincode" name="pincode" value="{{ data.pincode|default('') }}" pattern="^[1-9]\d{5}$" maxlength="6" placeholder="6-digit PIN code">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- B. NGO FIELDS -->
+                        <div id="ngoFields" class="role-section" style="display: none;">
+                            <h5 class="fw-bold text-dark mb-3"><i class="fa-solid fa-building-ngo me-2 text-primary"></i> NGO Verification & Details</h5>
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <label for="ngo_name" class="form-label fw-semibold">NGO / Organization Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="ngo_name" name="ngo_name" value="{{ data.ngo_name|default('') }}" placeholder="e.g. Hope Food Foundation">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="registration_number" class="form-label fw-semibold">Govt. Registration / Darpan No. <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="registration_number" name="registration_number" value="{{ data.registration_number|default('') }}" placeholder="e.g. NGO/MH/2021/001928">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="contact_person" class="form-label fw-semibold">Authorized Representative Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="contact_person" name="contact_person" value="{{ data.contact_person|default('') }}" placeholder="e.g. Dr. Ananya Sen">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="ngo_type" class="form-label fw-semibold">NGO Category <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="ngo_type" name="ngo_type">
+                                        <option value="shelter">Night Shelter / Homeless Refuge</option>
+                                        <option value="orphanage">Orphanage & Children's Home</option>
+                                        <option value="food_bank">Community Food Bank</option>
+                                        <option value="charity">Registered Charitable Trust</option>
+                                        <option value="community_kitchen">Community Kitchen / Langar</option>
+                                        <option value="old_age_home">Senior Citizens / Old Age Home</option>
+                                        <option value="other">Other Relief Organization</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="ngo_address" class="form-label fw-semibold">Registered Office Address <span class="text-danger">*</span></label>
+                                    <textarea class="form-control" id="ngo_address" name="address" rows="2" placeholder="Official physical address of the NGO">{{ data.address|default('') }}</textarea>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="ngo_city" class="form-label fw-semibold">City <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="ngo_city" name="city" value="{{ data.city|default('') }}" placeholder="e.g. Delhi">
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="ngo_state" class="form-label fw-semibold">State <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="ngo_state" name="state" value="{{ data.state|default('') }}" placeholder="e.g. Delhi NCR">
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="ngo_pincode" class="form-label fw-semibold">PIN Code <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="ngo_pincode" name="pincode" value="{{ data.pincode|default('') }}" pattern="^[1-9]\d{5}$" maxlength="6" placeholder="6-digit PIN code">
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="verification_document" class="form-label fw-semibold">Upload Registration Certificate (PDF, PNG, JPG - Max 5MB)</label>
+                                    <input type="file" class="form-control" id="verification_document" name="verification_document" accept=".pdf,.png,.jpg,.jpeg">
+                                    <small class="text-muted">Admins will verify this document before approving food requests.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- C. VOLUNTEER FIELDS -->
+                        <div id="volunteerFields" class="role-section" style="display: none;">
+                            <h5 class="fw-bold text-dark mb-3"><i class="fa-solid fa-person-biking me-2 text-warning"></i> Volunteer Pickup Profile</h5>
+                            <div class="row g-3 mb-4">
+                                <div class="col-12">
+                                    <label for="vol_address" class="form-label fw-semibold">Residential / Base Address <span class="text-danger">*</span></label>
+                                    <textarea class="form-control" id="vol_address" name="address" rows="2" placeholder="Street address or neighborhood where you are based">{{ data.address|default('') }}</textarea>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="vol_city" class="form-label fw-semibold">City <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="vol_city" name="city" value="{{ data.city|default('') }}" placeholder="e.g. Bengaluru">
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="vol_pincode" class="form-label fw-semibold">PIN Code <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="vol_pincode" name="pincode" value="{{ data.pincode|default('') }}" pattern="^[1-9]\d{5}$" maxlength="6" placeholder="6-digit PIN code">
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="vehicle_type" class="form-label fw-semibold">Transport / Vehicle Available <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="vehicle_type" name="vehicle_type">
+                                        <option value="two_wheeler">Two-Wheeler (Bike / Scooter)</option>
+                                        <option value="four_wheeler">Car / Utility Vehicle</option>
+                                        <option value="van">Van / Small Truck</option>
+                                        <option value="bicycle">Bicycle</option>
+                                        <option value="none">Public Transport / On Foot</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Terms & Safety Commitment -->
+                        <div class="form-check mb-4">
+                            <input class="form-check-input" type="checkbox" id="terms" required>
+                            <label class="form-check-label small text-muted" for="terms">
+                                I confirm that all submitted details are accurate. I understand and commit to our platform's 
+                                <a href="{{ url_for('main.food_safety') }}" target="_blank" class="text-success fw-bold text-decoration-none">Food Safety & Hygiene Standards</a>.
+                            </label>
+                            <div class="invalid-feedback">You must agree to the terms and safety guidelines.</div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-success w-100 py-2 fw-bold shadow-sm mb-3">
+                            <i class="fa-solid fa-user-check me-2"></i> Complete Registration
+                        </button>
+
+                        <div class="text-center small text-muted">
+                            Already registered?
+                            <a href="{{ url_for('auth.login') }}" class="fw-bold text-success text-decoration-none">Log in here</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Role switcher logic
+    const roleRadios = document.querySelectorAll('input[name="role"]');
+    const donorFields = document.getElementById('donorFields');
+    const ngoFields = document.getElementById('ngoFields');
+    const volunteerFields = document.getElementById('volunteerFields');
+
+    function updateRoleView(role) {
+        donorFields.style.display = (role === 'donor') ? 'block' : 'none';
+        ngoFields.style.display = (role === 'ngo') ? 'block' : 'none';
+        volunteerFields.style.display = (role === 'volunteer') ? 'block' : 'none';
+
+        // Only submit fields from the selected role. The role sections reuse
+        // names such as address, city, and pincode.
+        document.querySelectorAll('.role-section').forEach(section => {
+            const isActive = section.id === `${role}Fields`;
+            section.querySelectorAll('input, textarea, select').forEach(field => {
+                field.disabled = !isActive;
+            });
+        });
+
+        // Toggle required attributes to avoid blocking submission of inactive sections
+        document.querySelectorAll('#donorFields [name="address"], #donorFields [name="city"], #donorFields [name="area"], #donorFields [name="pincode"]')
+            .forEach(el => el.required = (role === 'donor'));
+
+        document.querySelectorAll('#ngoFields [name="ngo_name"], #ngoFields [name="registration_number"], #ngoFields [name="contact_person"], #ngoFields [name="address"], #ngoFields [name="city"], #ngoFields [name="state"], #ngoFields [name="pincode"]')
+            .forEach(el => el.required = (role === 'ngo'));
+
+        document.querySelectorAll('#volunteerFields [name="address"], #volunteerFields [name="city"], #volunteerFields [name="pincode"]')
+            .forEach(el => el.required = (role === 'volunteer'));
+    }
+
+    roleRadios.forEach(radio => {
+        radio.addEventListener('change', function () {
+            updateRoleView(this.value);
+        });
+        if (radio.checked) {
+            updateRoleView(radio.value);
+        }
+    });
+
+    // Password strength visual indicator
+    const passwordInput = document.getElementById('password');
+    const confirmInput = document.getElementById('confirm_password');
+
+    passwordInput.addEventListener('input', function () {
+        const val = this.value;
+        const res = isStrongPassword(val);
+
+        updateIndicator('ruleLen', res.hasMinLen);
+        updateIndicator('ruleUpper', res.hasUpper);
+        updateIndicator('ruleLower', res.hasLower);
+        updateIndicator('ruleNumber', res.hasDigit);
+        updateIndicator('ruleSpecial', res.hasSpecial);
+    });
+
+    function updateIndicator(id, isValid) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const icon = el.querySelector('i');
+        if (isValid) {
+            icon.className = 'fa-solid fa-circle-check me-1 text-success';
+        } else {
+            icon.className = 'fa-solid fa-circle-dot me-1 text-secondary';
+        }
+    }
+
+    // Match validation
+    confirmInput.addEventListener('input', function () {
+        if (this.value !== passwordInput.value) {
+            this.setCustomValidity("Passwords do not match.");
+        } else {
+            this.setCustomValidity("");
+        }
+    });
+</script>
+{% endblock %}

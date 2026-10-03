@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}System Audit & Security Trail - Surplus Food Distribution System{% endblock %}
+
+{% block content %}
+<div class="py-4 bg-dark-green text-white mb-4">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1">
+                    <li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}" class="text-light opacity-75 text-decoration-none">Dashboard</a></li>
+                    <li class="breadcrumb-item active text-white" aria-current="page">Audit Logs</li>
+                </ol>
+            </nav>
+            <h2 class="fw-bold mb-0"><i class="fa-solid fa-shield-halved me-2 text-warning"></i> Security & Activity Audit Trail</h2>
+        </div>
+        <div class="mt-2 mt-md-0">
+            <span class="badge bg-light text-dark p-2">Total Log Records: <strong>{{ pagination.total_items }}</strong></span>
+        </div>
+    </div>
+</div>
+
+<div class="container pb-5">
+    <!-- Filter Form -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+        <form method="GET" action="{{ url_for('admin.audit_logs') }}" class="row g-3 align-items-end">
+            <div class="col-md-6">
+                <label for="search" class="form-label fw-semibold small text-muted">Search Logs</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+                    <input type="text" class="form-control" id="search" name="search" value="{{ search }}" placeholder="Search details, IP address, or user...">
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <label for="action" class="form-label fw-semibold small text-muted">Filter by Action</label>
+                <select class="form-select" id="action" name="action">
+                    <option value="">All Security Actions</option>
+                    {% for act in actions %}
+                        <option value="{{ act.action }}" {% if selected_action == act.action %}selected{% endif %}>{{ act.action }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-3 d-flex gap-2">
+                <button type="submit" class="btn btn-success w-100 fw-semibold"><i class="fa-solid fa-filter me-1"></i> Filter</button>
+                <a href="{{ url_for('admin.audit_logs') }}" class="btn btn-outline-secondary"><i class="fa-solid fa-rotate-left"></i></a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Logs Table -->
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white mb-4">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0 small">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Timestamp</th>
+                        <th>Action</th>
+                        <th>User</th>
+                        <th>Role</th>
+                        <th>Entity</th>
+                        <th>IP Address</th>
+                        <th class="pe-4">Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if logs %}
+                        {% for log in logs %}
+                            <tr>
+                                <td class="ps-4 text-nowrap text-muted">{{ log.created_at }}</td>
+                                <td>
+                                    <span class="badge {{ 'bg-success' if 'SUCCESS' in log.action or 'REGISTER' in log.action or 'APPROVED' in log.action else 'bg-danger' if 'FAIL' in log.action or 'UNAUTHORIZED' in log.action or 'REJECT' in log.action else 'bg-primary' if 'CHANGE' in log.action or 'ASSIGN' in log.action else 'bg-secondary' }}">
+                                        {{ log.action }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if log.user_name %}
+                                        <div class="fw-semibold text-dark">{{ log.user_name }}</div>
+                                        <div class="text-muted" style="font-size: 0.78rem;">{{ log.user_email }}</div>
+                                    {% else %}
+                                        <span class="text-muted">System / Anonymous</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if log.user_role %}
+                                        <span class="badge bg-light text-dark border">{{ log.user_role|upper }}</span>
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td><code>{{ log.entity_type }}{% if log.entity_id %}:{{ log.entity_id }}{% endif %}</code></td>
+                                <td><span class="text-muted">{{ log.ip_address or 'Localhost' }}</span></td>
+                                <td class="pe-4 text-break">{{ log.details or '-' }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="7" class="text-center py-5 text-muted">
+                                <i class="fa-solid fa-list-check fa-3x text-secondary opacity-50 mb-3"></i>
+                                <p class="mb-0">No audit trail records found matching criteria.</p>
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if pagination.total_pages > 1 %}
+            <div class="card-footer bg-white border-0 py-3 d-flex justify-content-between align-items-center">
+                <div class="small text-muted">Page {{ pagination.page }} of {{ pagination.total_pages }}</div>
+                <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item {% if not pagination.has_prev %}disabled{% endif %}">
+                        <a class="page-link" href="{{ url_for('admin.audit_logs', page=pagination.prev_page, search=search, action=selected_action) }}">Prev</a>
+                    </li>
+                    <li class="page-item active"><span class="page-link">{{ pagination.page }}</span></li>
+                    <li class="page-item {% if not pagination.has_next %}disabled{% endif %}">
+                        <a class="page-link" href="{{ url_for('admin.audit_logs', page=pagination.next_page, search=search, action=selected_action) }}">Next</a>
+                    </li>
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

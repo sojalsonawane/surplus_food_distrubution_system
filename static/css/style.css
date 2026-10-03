@@ -1,0 +1,298 @@
+/* 
+ * Surplus Food Distribution System
+ * Custom Styling & Color Theme (Bootstrap 5 Enhancements)
+ */
+
+:root {
+    --primary-green: #198754;
+    --dark-green: #0f5132;
+    --light-green: #d1e7dd;
+    --accent-emerald: #146c43;
+    --hero-bg: linear-gradient(90deg, rgba(7, 75, 43, 0.98) 0%, rgba(8, 93, 52, 0.94) 31%, rgba(10, 104, 59, 0.58) 53%, rgba(10, 104, 59, 0.2) 100%), url("../images/food-donation-hero.png") center right / cover no-repeat, linear-gradient(135deg, #0f5132 0%, #198754 100%);
+    --card-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    --hover-shadow: 0 8px 25px rgba(25, 135, 84, 0.18);
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: #333333;
+    background-color: #f8faf9;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Custom Primary Colors */
+.bg-primary-green {
+    background-color: var(--primary-green) !important;
+}
+
+.bg-dark-green {
+    background-color: var(--dark-green) !important;
+}
+
+.text-primary-green {
+    color: var(--primary-green) !important;
+}
+
+.text-dark-green {
+    color: var(--dark-green) !important;
+}
+
+.btn-primary-green {
+    background-color: var(--primary-green);
+    border-color: var(--primary-green);
+    color: #ffffff;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-primary-green:hover,
+.btn-primary-green:focus {
+    background-color: var(--accent-emerald);
+    border-color: var(--accent-emerald);
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(20, 108, 67, 0.25);
+}
+
+.btn-outline-green {
+    color: var(--primary-green);
+    border-color: var(--primary-green);
+    font-weight: 500;
+}
+
+.btn-outline-green:hover {
+    background-color: var(--primary-green);
+    color: #ffffff;
+}
+
+/* Navbar */
+.navbar-custom {
+    background: linear-gradient(90deg, var(--dark-green) 0%, var(--primary-green) 100%);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-custom .navbar-brand {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    font-size: 1.35rem;
+}
+
+.navbar-custom .nav-link {
+    font-weight: 500;
+    padding: 0.5rem 0.9rem !important;
+    transition: color 0.2s ease;
+}
+
+.navbar-custom .nav-link:hover,
+.navbar-custom .nav-link.active {
+    color: #ffffff !important;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.35);
+}
+
+/* Hero Section */
+.hero-section {
+    background: var(--hero-bg);
+    color: #ffffff;
+    min-height: 670px;
+    display: flex;
+    align-items: center;
+    padding: 5.5rem 0 4.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40px;
+    background: #f8faf9;
+    clip-path: polygon(0 100%, 100% 100%, 100% 0);
+}
+
+.hero-title {
+    font-size: 2.75rem;
+    font-weight: 800;
+    line-height: 1.25;
+}
+
+.hero-subtitle {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.9);
+    max-width: 700px;
+}
+
+@media (max-width: 991.98px) {
+    .hero-section {
+        min-height: 0;
+        background: linear-gradient(180deg, rgba(7, 75, 43, 0.96) 0%, rgba(8, 93, 52, 0.9) 100%), url("../images/food-donation-hero.png") center / cover no-repeat;
+    }
+}
+
+/* Feature & Stat Cards */
+.custom-card {
+    background: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    transition: all 0.25s ease;
+}
+
+.custom-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--hover-shadow);
+}
+
+.stat-card {
+    border-left: 4px solid var(--primary-green);
+    border-radius: 10px;
+    background: #ffffff;
+    padding: 1.5rem;
+    box-shadow: var(--card-shadow);
+}
+
+.stat-number {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--dark-green);
+}
+
+/* Workflow Step Box */
+.step-box {
+    position: relative;
+    padding: 2rem 1.25rem;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    text-align: center;
+    height: 100%;
+    transition: transform 0.2s;
+}
+
+.step-box:hover {
+    transform: translateY(-3px);
+}
+
+.step-number {
+    width: 44px;
+    height: 44px;
+    line-height: 44px;
+    background-color: var(--light-green);
+    color: var(--dark-green);
+    border-radius: 50%;
+    display: inline-block;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+}
+
+/* Warning / Food Safety Banner */
+.food-safety-banner {
+    background-color: #fff3cd;
+    border: 1px solid #ffe69c;
+    border-left: 5px solid #ffc107;
+    color: #664d03;
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+}
+
+/* Footer */
+.footer-custom {
+    background-color: #0b2214;
+    color: #ced4da;
+    margin-top: auto;
+    font-size: 0.92rem;
+}
+
+.footer-custom a {
+    color: #98d8aa;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.footer-custom a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+.footer-custom hr {
+    border-color: #1b3d27;
+}
+
+/* Form Styles */
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+}
+
+/* Badges */
+.badge-veg {
+    background-color: #198754;
+    color: #ffffff;
+}
+
+.badge-nonveg {
+    background-color: #dc3545;
+    color: #ffffff;
+}
+
+.food-image-thumb {
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+.cta-section {
+    background:
+        linear-gradient(90deg, rgba(4, 65, 37, 0.18) 0%, rgba(5, 76, 43, 0.3) 50%, rgba(4, 65, 37, 0.18) 100%),
+        url("../images/food-redistribution.png") center / cover no-repeat,
+        linear-gradient(135deg, #0a3622 0%, #198754 100%);
+    min-height: 360px;
+    display: flex;
+    align-items: center;
+}
+
+.cta-section .container {
+    position: relative;
+    z-index: 1;
+}
+
+.page-hero-section {
+    background:
+        linear-gradient(90deg, rgba(4, 65, 37, 0.3) 0%, rgba(5, 76, 43, 0.42) 50%, rgba(4, 65, 37, 0.3) 100%),
+        url("../images/food-redistribution.png") center / cover no-repeat,
+        linear-gradient(135deg, #0f5132 0%, #198754 100%);
+    min-height: 285px;
+    display: flex;
+    align-items: center;
+}
+
+.page-hero-section .container {
+    position: relative;
+    z-index: 1;
+}
+
+@media (max-width: 767.98px) {
+    .cta-section {
+        min-height: 0;
+        background:
+            linear-gradient(180deg, rgba(4, 65, 37, 0.38) 0%, rgba(5, 76, 43, 0.48) 100%),
+            url("../images/food-redistribution.png") center / cover no-repeat,
+            linear-gradient(135deg, #0a3622 0%, #198754 100%);
+    }
+
+    .page-hero-section {
+        min-height: 230px;
+        background:
+            linear-gradient(180deg, rgba(4, 65, 37, 0.45) 0%, rgba(5, 76, 43, 0.55) 100%),
+            url("../images/food-redistribution.png") center / cover no-repeat,
+            linear-gradient(135deg, #0f5132 0%, #198754 100%);
+    }
+}

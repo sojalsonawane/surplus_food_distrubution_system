@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %}Delivery History - Surplus Food Distribution System{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4"><div><span class="text-success fw-bold text-uppercase small">Volunteer Portal</span><h2 class="fw-bold mb-0">Delivery History</h2></div><a href="{{ url_for('volunteer.dashboard') }}" class="btn btn-outline-secondary">Back to Dashboard</a></div>
+    <div class="custom-card p-3">{% if assignments %}<div class="table-responsive"><table class="table table-hover align-middle mb-0"><thead><tr><th>Food</th><th>Location</th><th>Status</th><th>Updated</th><th></th></tr></thead><tbody>{% for item in assignments %}<tr><td class="fw-semibold">{{ item.food_name }}<small class="d-block text-muted">{{ item.quantity }} {{ item.unit }}</small></td><td>{{ item.area }}, {{ item.city }}</td><td><span class="badge bg-{{ 'success' if item.status == 'delivered' else 'secondary' }}">{{ item.status|title }}</span></td><td>{{ item.updated_at }}</td><td><a class="btn btn-sm btn-outline-success" href="{{ url_for('volunteer.pickup_detail', pickup_id=item.id) }}">View</a></td></tr>{% endfor %}</tbody></table></div>{% else %}<div class="text-center p-5 text-muted"><i class="fa-solid fa-clock-rotate-left fa-3x mb-3"></i><p>No delivery history yet.</p></div>{% endif %}</div>
+</div>
+{% endblock %}
